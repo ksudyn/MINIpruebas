@@ -1,19 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putchar.c                                       :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ksudyn <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 15:35:02 by ksudyn            #+#    #+#             */
-/*   Updated: 2025/01/16 15:35:13 by ksudyn           ###   ########.fr       */
+/*   Created: 2025/03/12 15:31:06 by ksudyn            #+#    #+#             */
+/*   Updated: 2025/03/12 15:31:10 by ksudyn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "minishell.h"
 
-char	ft_putchar(char c)
+void ft_pwd(void)
 {
-	write(1, &c, 1);
-	return (1);
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL)
+        printf("%s\n", cwd);
+    else
+        perror("pwd");
 }
