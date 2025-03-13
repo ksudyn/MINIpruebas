@@ -21,50 +21,52 @@ void previous_pwd(void)
     if (oldpwd)
         setenv("OLDPWD", oldpwd, 1); // Guarda el anterior PWD en PREVIOUSPWD
 }
+//Getenv busca en la libreta de la computadora y devuelve el valor de una variable de entorno.
+//la busca y si existe la ejecuta
 
 void new_pwd(char *new_path)
 {
-    if (!new_path) // Si la nueva ruta es NULL, obtener el directorio actual
+    if (!new_path)
         new_path = getcwd(NULL, 0);
-    if (!new_path)// Si getcwd falla, mostrar error
+    if (!new_path)
     {
         perror("getcwd");
         return ;
     }
-    setenv("PWD", new_path, 1);// Actualiza PWD
+    setenv("PWD", new_path, 1);
     free(new_path);
 }
 
 //FUNCIONES QUE FT_CD USARA, LUEGO SE MODIFICARAN EN BASE AL TYPEDEF STRUCT
 int cd_argument(char *path)
 {
-    // Cambia al directorio especificado por el argumento 'path'
     if (chdir(path) == -1)
     {
-        perror("minishell: cd");  // Si chdir falla, muestra error
-        return 1;  // Error en el cambio de directorio
+        perror("minishell: cd");
+        return 1;
     }
     
-    previous_pwd();  // Guarda el PWD actual en OLDPWD antes de cambiar
-    new_pwd(getcwd(NULL, 0));  // Actualiza PWD con la nueva ruta
-    return 0;  // Cambio de directorio exitoso
+    previous_pwd();
+    new_pwd(getcwd(NULL, 0));
+    return 0;
 }
 
 int cd_home(void)
 {
-    // Cambia al directorio HOME
-    char *home = getenv("HOME");
+    char *home;
+    
+    home = getenv("HOME");
     if (home && chdir(home) == -1)
     {
-        perror("minishell: cd");  // Si chdir falla, muestra error
-        return 1;  // Error en el cambio de directorio
+        perror("minishell: cd");
+        return 1;
     }
     
-    previous_pwd();  // Guarda el PWD actual en OLDPWD antes de cambiar
-    new_pwd(getcwd(NULL, 0));  // Actualiza PWD con la nueva ruta (HOME)
-    return 0;  // Cambio de directorio exitoso
+    previous_pwd();
+    new_pwd(getcwd(NULL, 0));
+    return 0;
 }
-
+//Chdir sirve para cambiar de carpeta (directorio) en la computadora.
 
 
 void ft_cd(char **args)
@@ -83,12 +85,12 @@ void ft_cd(char **args)
     if (i == 1)
     {
         if (cd_home() != 0)
-            return;  // Si ocurre un error al cambiar a HOME, termina la función
+            return;
     }
     else
     {
         if (cd_argument(args[1]) != 0)
-            return;  // Si ocurre un error al cambiar al directorio especificado, termina la función
+            return;
     }
 }
 //Getenv busca en la libreta de la computadora y devuelve el valor de una variable de entorno.

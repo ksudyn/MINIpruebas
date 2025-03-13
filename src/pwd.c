@@ -12,63 +12,30 @@
 
 #include "minishell.h"
 
-//POR REVISAR TODO
-void previous_pwd(void)
-{
-    char *oldpwd;;
-
-    oldpwd = getenv("PWD");
-
-    if (oldpwd)
-        setenv("OLDPWD", oldpwd, 1); // Guarda el anterior PWD en PREVIOUSPWD
-}
-
-void new_pwd(char *new_path)
-{
-    if (!new_path) // Si la nueva ruta es NULL, obtener el directorio actual
-        new_path = getcwd(NULL, 0);
-    if (!new_path)// Si getcwd falla, mostrar error
-    {
-        perror("getcwd");
-        return ;
-    }
-    setenv("PWD", new_path, 1);// Actualiza PWD
-    free(new_path);
-}
-
-
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-
 void ft_pwd(void)
 {
     char *cwd;
     const char *pwd_env;
     
-    // Intentamos obtener el directorio de trabajo actual
     cwd = getcwd(NULL, 0); 
     
-    if (!cwd)  // Si no conseguimos el directorio actual
+    if (!cwd)
     {
-        // Intentamos obtener la variable de entorno "PWD"
         pwd_env = getenv("PWD"); 
         
-        if (pwd_env)  // Si encontramos la variable PWD
+        if (pwd_env)
         {
-            printf("%s\n", pwd_env);  // Mostramos la variable PWD
+            printf("%s\n", pwd_env);
         }
-        else  // Si tampoco existe la variable PWD
+        else
         {
-            perror("pwd");  // Mostramos el error
+            perror("pwd");
         }
     }
-    else  // Si `getcwd` fue exitoso
+    else
     {
-        printf("%s\n", cwd);  // Mostramos el directorio actual
-        free(cwd);  // Liberamos la memoria asignada por getcwd
+        printf("%s\n", cwd);
+        free(cwd);
     }
 }
 //La función getcwd (que significa get current working directory, en español obtener el directorio de trabajo actual)
