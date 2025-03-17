@@ -12,21 +12,7 @@
 
 #include "minishell.h"
 
-typedef struct s_env
-{
-    char            *variable;   // Nombre de la variable (ej. "PATH")
-    char            *content;    // Valor de la variable (ej. "/usr/bin")
-    int             order;       // Posición en orden alfabético
-    struct s_env    *next;       // Siguiente nodo en la lista
-}   t_env;
 
-
-typedef struct s_mini
-{
-    t_env   *first_node;  // Apunta al primer nodo de la lista de variables de entorno
-    t_env   *node_inter;        // Iterador temporal para recorrer la lista
-    int     total_nodes;    // Número total de variables en la lista
-}   t_mini;
 
 //FUNCIONES DE LA LIBFT
 int	ft_isalpha(int c)
@@ -48,42 +34,122 @@ int	ft_isalnum(int c)
 	return (0);
 }
 
-int	ft_lstsize(t_node *lst)
+int	ft_lstsize(t_env *lst)
 {
-	int	cnt;
+	int	i;
 
-	cnt = 0;
-	while (lst)
+	i = 0;
+	if (!lst)
+		return (0);
+	while (lst != NULL)
 	{
+		i++;
 		lst = lst->next;
-		cnt++;
 	}
-	return (cnt);
+	return (i);
 }
 
-t_env	*ft_new_node(char *var, char *value)
+int ft_strcmp(const char *s1, const char *s2)
 {
-	t_env	*node;
+    if (!s1 || !s2)
+    {
+        printf("ft_strcmp: s1 = %p, s2 = %p\n", s1, s2); // Imprime las direcciones de los punteros
+        return (s1 == s2) ? 0 : (s1 ? 1 : -1);
+    }
 
-	node = (t_env *)malloc(sizeof(t_env));
-	if (!node)
+    while (*s1 && (*s1 == *s2))
+    {
+        s1++;
+        s2++;
+    }
+    return (unsigned char)(*s1) - (unsigned char)(*s2);
+}
+
+
+char	*ft_strchr(const char *s, int c)
+{
+	int	i;
+
+	i = 0;
+	if (s == NULL)
 		return (NULL);
-	node->variable = ft_strdup(var);
-	node->content = value ? ft_strdup(value) : NULL;
-	node->order = 0;  // Se actualizará luego en `create_nodes_order`
-	node->next = NULL;
-	return (node);
+	while (s[i] != '\0')
+	{
+		if ((char)c == s[i])
+			return ((char *)&s[i]);
+		i++;
+	}
+	if ((char)c == '\0')
+		return ((char *)&s[i]);
+	return (NULL);
 }
 
-int	ft_strcmp(const char *s1, const char *s2)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	while (*s1 && (*s1 == *s2))
+	size_t			total_size;
+	unsigned char	*ptr;
+
+	ptr = malloc(size * nmemb);
+	if (ptr == NULL)
+		return (NULL);
+	total_size = 0;
+	while (total_size < (size * nmemb))
 	{
-		s1++;
-		s2++;
+		ptr[total_size] = 0;
+		total_size++;
 	}
-	return ((unsigned char)*s1 - (unsigned char)*s2);
+	return ((void *)ptr);
 }
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	i;
+
+	i = 0;
+	if (str == NULL)
+		return (0);
+	while (str[i] != '\0')
+	{
+		i++;
+	}
+	return (i);
+}
+
+t_env *ft_lstnew(void *content)
+{
+    t_env *new_node;
+
+    new_node = (t_env *)malloc(sizeof(t_env));
+    if (!new_node)
+        return (NULL);
+    new_node->content = content;
+    new_node->next = NULL;
+    return (new_node);
+}
+
+void ft_lstadd_back(t_env **lst, t_env *new)
+{
+    t_env *temp;
+
+    if (!*lst || !new)
+    {
+        *lst = new;
+        return ;
+    }
+    temp = ft_lstlast(*lst);
+    temp->next = new;
+}
+
+
+t_env	*ft_lstlast(t_env *lst)
+{
+	if (!lst)
+		return (NULL);
+	while (lst->next != NULL)
+		lst = lst->next;
+	return (lst);
+}
+
 
 char	*ft_strdup(const char *s)
 {
@@ -103,18 +169,6 @@ char	*ft_strdup(const char *s)
 	return (dst);
 }
 
-int	ft_lstsize(t_node *lst)
-{
-	int	cnt;
-
-	cnt = 0;
-	while (lst)
-	{
-		lst = lst->next;
-		cnt++;
-	}
-	return (cnt);
-}
 //TERMINAN FUNCIONES LIBFT
 
 int is_valid_variable(char *var)
@@ -125,12 +179,12 @@ int is_valid_variable(char *var)
     if (!var || !var[0])
         return 0;
 
-    if (!isalpha(var[0]) && var[0] != '_')
+    if (!ft_isalpha(var[0]) && var[0] != '_')
         return 0;
 
     while (var[i])
     {
-        if (!isalnum(var[i]) && var[i] != '_')
+        if (!ft_isalnum(var[i]) && var[i] != '_')
             return 0;
         i++;
     }
@@ -162,7 +216,7 @@ void add_or_update_variable(t_mini *mini, char *var, char *value)
         node = node->next;
     }
     // Si la variable no existe, crear un nuevo nodo
-    new_node = ft_new_node(var, value);
+    new_node = ft_lstnew(var);
     if (!new_node)
         return;
     // Agregar el nuevo nodo al final de la lista
@@ -216,113 +270,46 @@ void print_export_list(t_mini *mini)
     }
 }
 
-int ft_export(char **args, t_mini *mini)
+int export_args(char **args, t_mini *mini)
 {
-    int exit_status = 0;
+    int i;
+    int exit_status;
+    char *var_name;
+    char *value;
 
-    // Si no hay argumentos, solo se deben imprimir las variables de entorno
-    if (!args[1])  // Es lo mismo que argc == 1 pero más simple
+    i = 0;
+    exit_status = 0;
+    while (args[++i])
     {
-        // Contamos los nodos (variables de entorno)
-        mini->total_nodes = ft_lstsize(mini->first_node);
-        
-        // Ordenamos las variables alfabéticamente
-        create_nodes_order(mini);
-
-        // Imprimimos las variables de entorno
-        print_export_list(mini);
-        
-        return exit_status;
+        var_name = ft_strdup(args[i]);
+        if (!var_name)
+            return (1);
+        value = ft_strchr(var_name, '=');
+        if (value)
+            *value++ = '\0';
+        if (is_valid_variable(var_name))
+            add_or_update_variable(mini, var_name, value);
+        else
+        {
+            printf("minishell: export: `%s': not a valid identifier\n", var_name);
+            exit_status = 1;
+        }
+        free(var_name);
     }
-    else
-    {
-        // Si hay argumentos, procesamos cada uno
-        export_args(args, mini, &exit_status);
-    }
-
-    return exit_status;
+    return (exit_status);
 }
 
 int ft_export(char **args, t_mini *mini)
 {
-    int exit_status;
-                char *var_name;
-            char *value;
-            int i;
-
-    exit_status = 0;
-    if (!args[1]) 
+    if (!args[1])
     {
         mini->total_nodes = ft_lstsize(mini->first_node);
         nodes_order(mini);
         print_export_list(mini);
-        return exit_status;
+        return (0);
     }
-    else
-    {
-        i = 1;
-        while (args[i])
-        {
-            var_name = ft_strdup(args[i]);
-            value = ft_strchr(var_name, '=');  // Busca el '=' que separa la variable del valor
-            if (value)
-            {
-                *value = '\0';  // Separamos el nombre de la variable y el valor
-                value++;  // El valor empieza justo después del '='
-            }
-            if (is_valid_variable(var_name))
-            {
-                add_or_update_variable(mini, var_name, value);
-            }
-            else
-            {
-                // Si no es válida, mostramos un mensaje de error
-                ft_dprintf(2, "minishell: export: `%s': not a valid identifier\n", var_name);
-                exit_status = 1;  // Establecemos el estado de error
-            }
-            free(var_name);
-            i++;
-        }
-    }
-
-    return exit_status;
+    return (export_args(args, mini));
 }
-
-void export_args(char **args, t_mini *mini, int *exit_status)
-{
-    int i;
-    char *var_name;
-    char *value;
-
-    i = 1; // Empezamos desde el segundo argumento (el primero es "export")
-    *exit_status = 0; // Establecemos el valor inicial del exit_status
-    while (args[i])
-    {     // Separamos el argumento en nombre de la variable y su valor
-        var_name = ft_strdup(args[i]);
-        value = ft_strchr(var_name, '=');
-        if (value)
-        {
-            *value = '\0';  // Separamos el nombre de la variable y su valor
-            value++;  // El valor empieza justo después del signo '='
-        }
-        // Verificar si el nombre de la variable es válido
-        if (is_valid_variable(var_name))
-        {
-            // Agregar o actualizar la variable en la lista
-            add_or_update_variable(mini, var_name, value);
-        }
-        else
-        {
-            // Si no es válido, mostrar un mensaje de error
-            ft_dprintf(2, "minishell: export: `%s': not a valid identifier\n", var_name);
-            *exit_status = 1; // Establecemos un estado de error
-        }  // Liberamos la memoria de la variable que usamos para almacenar el nombre
-        free(var_name);
-        i++;
-    }
-}
-
-
 
 //Si se llama sin argumentos,
 //debe imprimir todas las variables de entorno en orden alfabético y con el formato:
@@ -333,3 +320,47 @@ void export_args(char **args, t_mini *mini, int *exit_status)
 //(no puede empezar con un número o contener caracteres inválidos como = en el nombre).
 //No usa export VAR sin = para marcar variables como exportadas, ya que minishell no requiere esto.
 //El orden importa: cuando se imprimen las variables, deben aparecer ordenadas alfabéticamente.
+
+
+//UN MAIN CREADO CON CHATGPT PATA VER SI FUNCIONA
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    // Inicializar un entorno de pruebas
+    t_mini mini;
+    mini.first_node = NULL;
+    mini.total_nodes = 0;
+
+    // Agregar algunas variables de entorno iniciales
+    add_or_update_variable(&mini, "USER", "alice");
+    add_or_update_variable(&mini, "HOME", "/home/alice");
+    add_or_update_variable(&mini, "SHELL", "/bin/bash");
+
+    // Comprobar el comportamiento de `ft_export` sin argumentos
+    printf("=== Sin argumentos ===\n");
+    char *args1[] = {"export", NULL};  // No pasa argumentos, solo el comando
+    ft_export(args1, &mini);  // Debería imprimir las variables ordenadas alfabéticamente
+
+    // Agregar más variables de entorno
+    add_or_update_variable(&mini, "PATH", "/usr/bin:/bin");
+    add_or_update_variable(&mini, "EDITOR", "vim");
+
+    // Comprobar el comportamiento de `ft_export` con una asignación de variable
+    printf("\n=== Con argumentos ===\n");
+    char *args2[] = {"export", "NEW_VAR=value", NULL};  // Agregar una nueva variable
+    ft_export(args2, &mini);  // Debería agregar `NEW_VAR` con su valor a la lista
+
+    // Comprobar el comportamiento de `ft_export` con una actualización de variable
+    printf("\n=== Actualizar variable ===\n");
+    char *args3[] = {"export", "HOME=/home/alice/updated", NULL};  // Actualizar `HOME`
+    ft_export(args3, &mini);  // Debería actualizar el valor de `HOME`
+
+    // Imprimir la lista final de variables
+    printf("\n=== Lista Final ===\n");
+    ft_export(args1, &mini);  // Debería imprimir todas las variables ordenadas correctamente
+
+    return 0;
+}

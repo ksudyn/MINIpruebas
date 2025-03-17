@@ -60,10 +60,10 @@ typedef struct s_node
 	int				index;
 }					t_node;
 
-t_node				*ft_lstnew(void *content);
+//t_node				*ft_lstnew(void *content);
 void				ft_lstadd_front(t_node **lst, t_node *new);
-int					ft_lstsize(t_node *lst);
-t_node				*ft_lstlast(t_node *lst);
-void				ft_lstadd_back(t_node **lst, t_node *new);
+//int					ft_lstsize(t_node *lst);
+//t_node				*ft_lstlast(t_node *lst);
+//void				ft_lstadd_back(t_node **lst, t_node *new);
 void				ft_lstclear(t_node **lst, void (*del)(void *));
 #endif
