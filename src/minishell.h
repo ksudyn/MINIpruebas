@@ -26,6 +26,7 @@ typedef struct s_env
     char            *content;    // Valor de la variable (ej. "/usr/bin")
     int             order;       // Posición en orden alfabético
     struct s_env    *next;       // Siguiente nodo en la lista
+    struct s_env    *prev;
 }   t_env;
 
 
