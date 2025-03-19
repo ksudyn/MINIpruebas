@@ -49,20 +49,20 @@ int	ft_lstsize(t_env *lst)
 	return (i);
 }
 
-int ft_strcmp(const char *s1, const char *s2)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-    if (!s1 || !s2)
-    {
-        printf("ft_strcmp: s1 = %p, s2 = %p\n", s1, s2); // Imprime las direcciones de los punteros
-        return (s1 == s2) ? 0 : (s1 ? 1 : -1);
-    }
+	int	i;
 
-    while (*s1 && (*s1 == *s2))
-    {
-        s1++;
-        s2++;
-    }
-    return (unsigned char)(*s1) - (unsigned char)(*s2);
+	i = 0;
+	if (s1 == NULL || s2 == NULL)
+		return (0);
+	while (s1[i] != '\0' || s2[i] != '\0')
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	return (0);
 }
 
 
@@ -124,6 +124,7 @@ t_env *ft_lstnew(void *content)
         return (NULL);
     new_node->content = content;
     new_node->next = NULL;
+    new_node->prev = NULL;
     return (new_node);
 }
 
@@ -138,6 +139,7 @@ void ft_lstadd_back(t_env **lst, t_env *new)
     }
     temp = ft_lstlast(*lst);
     temp->next = new;
+    new->prev = temp;
 }
 
 

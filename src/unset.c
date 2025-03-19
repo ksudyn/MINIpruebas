@@ -11,91 +11,148 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
-/*
-void ft_unset(char **args)
+
+int	ft_strcmp(const char *s1, const char *s2)
 {
-    if (args[1])
-        unsetenv(args[1]);  // Elimina la variable de entorno
-}*/
+	int	i;
 
-void ft_unset_env_node(t_mini *mini, char *variable)
-{
-    t_env *current = mini->first_node;
-
-    while (current)
-    {
-        if (strcmp(current->variable, variable) == 0)
-        {
-            // Si el nodo a eliminar es el primero
-            if (current->prev == NULL)
-                mini->first_node = current->next;
-            else
-                current->prev->next = current->next;
-
-            // Si el nodo a eliminar es el último
-            if (current->next)
-                current->next->prev = current->prev;
-
-            // Libera la memoria del nodo
-            free(current->variable);
-            free(current->content);
-            free(current);
-
-            mini->total_nodes--;
-            return;
-        }
-        current = current->next;
-    }
+	i = 0;
+	if (s1 == NULL || s2 == NULL)
+		return (0);
+	while (s1[i] != '\0' || s2[i] != '\0')
+	{
+		if (s1[i] != s2[i])
+			return (s1[i] - s2[i]);
+		i++;
+	}
+	return (0);
 }
 
-void ft_unset_env(t_mini *mini, char **args)
+int ft_unset_env(t_mini *mini, char *variable)
+{
+    t_env *node;
+    
+    node = mini->first_node;
+    while (node)
+    {
+        if (strcmp(node->variable, variable) == 0)
+        {
+            if (node->prev == NULL)
+                mini->first_node = node->next;
+            else
+                node->prev->next = node->next;
+
+            if (node->next)
+                node->next->prev = node->prev;
+
+            free(node->variable);
+            free(node->content);
+            free(node);
+
+            mini->total_nodes--;
+            return (0);
+        }
+        node = node->next;
+    }
+    return (1);
+}
+
+int ft_unset(t_mini *mini, char **args)
 {
     int i;
-    
-    i = 1; // Comenzamos desde 1 porque el primer argumento es el comando "unset"
+    int len;
+
+    len = 0;
+    while(args[len])
+        len++;
+    if(len == 1)
+        return (0);
+    i = 1;
     while (args[i])
     {
-        // Omitir variables especiales
         if (ft_strcmp(args[i], "_") == 0 || ft_strcmp(args[i], "?") == 0)
         {
             i++;
-            continue;
         }
-
-        // Llamar a la función de eliminación del nodo (que ya has implementado)
-        ft_unset_env_node(mini, args[i]);
-
+        else
+        {
+        ft_unset_env(mini, args[i]);
         i++;
+        }
     }
+    return (0);
+}
+
+//MAIN GENERADO POR CHATGPT
+// Función para imprimir la lista de variables de entorno
+void print_env(t_mini *mini)
+{
+    t_env *current = mini->first_node;
+    printf("\nLista de variables de entorno:\n");
+    while (current)
+    {
+        printf("%s=%s\n", current->variable, current->content);
+        current = current->next;
+    }
+    printf("\n");
+}
+
+// Función para crear un nodo de entorno
+t_env *create_env_node(char *var, char *value)
+{
+    t_env *new = malloc(sizeof(t_env));
+    if (!new)
+        return NULL;
+    new->variable = strdup(var);
+    new->content = strdup(value);
+    new->next = NULL;
+    new->prev = NULL;
+    return new;
+}
+
+// Función para agregar una variable al entorno (al final de la lista)
+void add_env_var(t_mini *mini, char *var, char *value)
+{
+    t_env *new = create_env_node(var, value);
+    t_env *temp = mini->first_node;
+
+    if (!mini->first_node)
+        mini->first_node = new;
+    else
+    {
+        while (temp->next)
+            temp = temp->next;
+        temp->next = new;
+        new->prev = temp;
+    }
+    mini->total_nodes++;
 }
 
 
-// 🔹 Función de prueba
-int main() {
-    // 🌱 Crear lista de variables de entorno
-    t_env *env_list = new_env_var("USER", "root", 1);
-    env_list->next = new_env_var("HOME", "/home/root", 2);
-    env_list->next->next = new_env_var("PATH", "/bin:/usr/bin", 3);
+// Función principal de prueba
+int main(int argc, char **argv)
+{
+    (void)argc;
+    
+    // Inicializar estructura
+    t_mini mini;
+    mini.first_node = NULL;
+    mini.total_nodes = 0;
 
-    // 🛠 Simulamos `unset HOME`
-    char *args[] = {"unset", "HOME", NULL};
-    ft_built_unset(args, &env_list);
+    // Agregar variables de entorno
+    add_env_var(&mini, "USER", "root");
+    add_env_var(&mini, "HOME", "/home/root");
+    add_env_var(&mini, "PATH", "/usr/bin:/bin");
+    add_env_var(&mini, "SHELL", "/bin/bash");
 
-    // 📌 Imprimir el entorno actualizado
-    t_env *tmp = env_list;
-    while (tmp) {
-        printf("%s=%s\n", tmp->variable, tmp->content);
-        tmp = tmp->next;
-    }
+    // Imprimir antes de unset
+    print_env(&mini);
 
-    // 🔥 Liberar memoria final
-    while (env_list) {
-        t_env *next = env_list->next;
-        free(env_list->variable);
-        free(env_list->content);
-        free(env_list);
-        env_list = next;
-    }
+    // Ejecutar unset con los argumentos de entrada
+    ft_unset(&mini, argv);
+
+    // Imprimir después de unset
+    print_env(&mini);
 
     return 0;
 }
