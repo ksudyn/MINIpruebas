@@ -34,7 +34,7 @@ int	ft_isalnum(int c)
 	return (0);
 }
 
-int	ft_lstsize(t_env *lst)
+int	ft_lstsize(t_list *lst)
 {
 	int	i;
 
@@ -115,11 +115,11 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
-t_env *ft_lstnew(void *content)
+t_list *ft_lstnew(void *content)
 {
-    t_env *new_node;
+    t_list *new_node;
 
-    new_node = (t_env *)malloc(sizeof(t_env));
+    new_node = (t_list *)malloc(sizeof(t_list));
     if (!new_node)
         return (NULL);
     new_node->content = content;
@@ -128,9 +128,9 @@ t_env *ft_lstnew(void *content)
     return (new_node);
 }
 
-void ft_lstadd_back(t_env **lst, t_env *new)
+void ft_lstadd_back(t_list **lst, t_list *new)
 {
-    t_env *temp;
+    t_list *temp;
 
     if (!*lst || !new)
     {
@@ -143,7 +143,7 @@ void ft_lstadd_back(t_env **lst, t_env *new)
 }
 
 
-t_env	*ft_lstlast(t_env *lst)
+t_list	*ft_lstlast(t_list *lst)
 {
 	if (!lst)
 		return (NULL);
@@ -198,8 +198,8 @@ int is_valid_variable(char *var)
 
 void add_or_update_variable(t_mini *mini, char *var, char *value)
 {
-    t_env *node;
-    t_env *new_node;
+    t_list *node;
+    t_list *new_node;
 
     node = mini->first_node;
     // Buscar si la variable ya existe en la lista
@@ -227,8 +227,8 @@ void add_or_update_variable(t_mini *mini, char *var, char *value)
 
 void nodes_order(t_mini *mini)
 {
-    t_env   *node;
-    t_env   *next_node;
+    t_list   *node;
+    t_list   *next_node;
     int     order;
 
     node = mini->first_node;
@@ -249,7 +249,7 @@ void nodes_order(t_mini *mini)
 
 void print_export_list(t_mini *mini)
 {
-    t_env *node;
+    t_list *node;
 
     nodes_order(mini);  // Primero ordenamos la lista alfabéticamente
 

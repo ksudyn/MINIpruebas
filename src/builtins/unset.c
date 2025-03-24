@@ -30,7 +30,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 
 int ft_unset_env(t_mini *mini, char *variable)
 {
-    t_env *node;
+    t_list *node;
     
     node = mini->first_node;
     while (node)
@@ -87,7 +87,7 @@ int ft_unset(t_mini *mini, char **args)
 // Función para imprimir la lista de variables de entorno
 void print_env(t_mini *mini)
 {
-    t_env *current = mini->first_node;
+    t_list *current = mini->first_node;
     printf("\nLista de variables de entorno:\n");
     while (current)
     {
@@ -98,9 +98,9 @@ void print_env(t_mini *mini)
 }
 
 // Función para crear un nodo de entorno
-t_env *create_env_node(char *var, char *value)
+t_list *create_env_node(char *var, char *value)
 {
-    t_env *new = malloc(sizeof(t_env));
+    t_list *new = malloc(sizeof(t_list));
     if (!new)
         return NULL;
     new->variable = strdup(var);
@@ -113,8 +113,8 @@ t_env *create_env_node(char *var, char *value)
 // Función para agregar una variable al entorno (al final de la lista)
 void add_env_var(t_mini *mini, char *var, char *value)
 {
-    t_env *new = create_env_node(var, value);
-    t_env *temp = mini->first_node;
+    t_list *new = create_env_node(var, value);
+    t_list *temp = mini->first_node;
 
     if (!mini->first_node)
         mini->first_node = new;
