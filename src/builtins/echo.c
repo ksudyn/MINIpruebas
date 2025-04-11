@@ -10,23 +10,11 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+# include "../../libft/libft.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while ((s1[i] || s2[i]) && i < n)
-	{
-		if (s1[i] != s2[i])
-			return ((unsigned char)s1[i] - (unsigned char)s2[i]);
-		i++;
-	}
-	return (0);
-}
-
-void	built_echo(char **args)
+/*
+void	ft_echo(char **args)
 {
 	int	i;
 	int	new_line;
@@ -49,14 +37,56 @@ void	built_echo(char **args)
 
 	if(new_line == 1)
 		printf("\n");
+}*/
+
+int	is_n_flag(const char *str)
+{
+	int	i;
+
+	if (!str || str[0] != '-' || str[1] != 'n')
+		return (0);
+	i = 2;
+	while (str[i])
+	{
+		if (str[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
+void	ft_echo(char **args)
+{
+	int	i;
+	int	new_line;
+
+	i = 1;
+	new_line = 1;
+	while (args[i] && is_n_flag(args[i]))
+	{
+		new_line = 0;
+		i++;
+	}
+
+	while (args[i])
+	{
+		printf("%s", args[i]);
+		if (args[i + 1])
+			printf(" ");
+		i++;
+	}
+
+	if (new_line)
+		printf("\n");
+}
+/*
 int main(int argc, char **argv)
 {
 	if(argc > 1)
-		built_echo(argv);
+		ft_echo(argv);
 	else
 		printf("\n");
 
 	return 0;
 }
+*/

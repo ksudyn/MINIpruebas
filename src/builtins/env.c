@@ -11,75 +11,9 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+# include "../../libft/libft.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	size_t			total_size;
-	unsigned char	*ptr;
-
-	ptr = malloc(size * nmemb);
-	if (ptr == NULL)
-		return (NULL);
-	total_size = 0;
-	while (total_size < (size * nmemb))
-	{
-		ptr[total_size] = 0;
-		total_size++;
-	}
-	return ((void *)ptr);
-}
-
-size_t	ft_strlen(const char *str)
-{
-	size_t	i;
-
-	i = 0;
-	if (str == NULL)
-		return (0);
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-
-char    *ft_strndup(const char *s, size_t len)
-{
-    char    *dest;
-    char    *start;
-    size_t  i;
-
-    if (s == NULL)
-        return (NULL);
-    dest = (char *)malloc(len + 1);
-    if (dest == NULL)
-        return (NULL);
-
-    start = dest;
-    for (i = 0; i < len && s[i] != '\0'; i++)
-        *dest++ = s[i];
-    *dest = '\0';
-
-    return (start);
-}
-
-char	*ft_strdup(const char *s)
-{
-	char	*dst;
-	int		i;
-
-	i = 0;
-	dst = ft_calloc(ft_strlen(s) + 1, sizeof(char));
-	if (!dst)
-		return (NULL);
-	while (s[i])
-	{
-		dst[i] = s[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (dst);
-}
+//UTILS PARA ESTAS FUNCIONES
 
 int	node_to_end(t_list **list, t_list *insert)
 {
@@ -105,22 +39,6 @@ int	node_to_end(t_list **list, t_list *insert)
 	return (1);
 }
 
-void	free_env(t_mini *mini)
-{
-	t_list	*temp;
-	t_list	*next_node;
-
-	temp = mini->env_list;
-	while (temp)
-	{
-		next_node = temp->next;
-		free(temp->variable);
-		free(temp->content);
-		free(temp);
-		temp = next_node;
-	}
-	mini->env_list = NULL;
-}
 
 t_list	*env_new(char *env_var)
 {
@@ -146,56 +64,9 @@ t_list	*env_new(char *env_var)
 }
 
 
-void	ft_export_env(char *new_env, t_mini *mini)
-{
-	t_list	*new_node;
-	t_list	*temp;
+//INICIO DE FUNCIONES DE ENV.C
 
-	new_node = env_new(new_env);
-	if (!new_node)
-		return ;
-
-	// Buscar si la variable ya existe en la lista
-	temp = mini->env_list;
-	while (temp)
-	{
-		if (strcmp(temp->variable, new_node->variable) == 0)
-		{
-			free(temp->content);
-			temp->content = strdup(new_node->content);
-			free(new_node->variable);
-			free(new_node->content);
-			free(new_node);
-			return ;
-		}
-		temp = temp->next;
-	}
-	// Si no existe, añadirla al final de la lista
-	node_to_end(&mini->env_list, new_node);
-}
-/*
-int	ft_built_env(char **args, t_mini *mini)
-{
-	t_list	*temp;
-
-	// Verifica que no se pasen argumentos a env
-	if (args[1])
-	{
-		printf("minishell: env: Args not allowed\n");
-		return (1);
-	}
-
-	temp = mini->env_list;
-	while (temp)
-	{
-		if (temp->content) // Solo imprimimos si hay contenido
-			printf("%s=%s\n", temp->variable, temp->content);
-		temp = temp->next;
-	}
-	return (0);
-}*/
-
-int ft_built_env(char **args, t_mini *mini)
+int ft_env(char **args, t_mini *mini)
 {
     t_list *temp;
 
@@ -206,12 +77,9 @@ int ft_built_env(char **args, t_mini *mini)
         return (1);
     }
 
-    temp = mini->env_list;
+    temp = mini->first_node;
     while (temp)
     {
-        printf("Procesando nodo: %p\n", temp);
-        printf("Variable: %p, Content: %p\n", temp->variable, temp->content);
-
         if (temp->variable && temp->content)
         {
             printf("%s=%s\n", temp->variable, temp->content);
@@ -220,7 +88,6 @@ int ft_built_env(char **args, t_mini *mini)
         {
             printf("Error: Invalid environment variable or content in node\n");
         }
-
         temp = temp->next;
     }
 
@@ -228,38 +95,24 @@ int ft_built_env(char **args, t_mini *mini)
 }
 
 
-
-void	init_env(char **envp, t_mini *mini)
+void	free_env(t_mini *mini)
 {
-	int		i;
-	t_list	*new_node;
+	t_list	*temp;
+	t_list	*next_node;
 
-    if (envp == NULL)
-    {
-        printf("Error: envp is NULL\n");
-        return;
-    }
-	mini->env_list = NULL;
-	i = 0;
-	while (envp[i])
+	temp = mini->first_node;
+	while (temp)
 	{
-        printf("Procesando envp[%d]: %s\n", i, envp[i]);
-		new_node = env_new(envp[i]);
-		if (!new_node)
-		{
-			printf("Error en '%s'\n", envp[i]);
-			return ;
-		}
-		if (node_to_end(&mini->env_list, new_node) == -1)
-        {
-            printf("Error al añadir el nodo a la lista\n");
-            return;
-        }
-		i++;
+		next_node = temp->next;
+		free(temp->variable);
+		free(temp->content);
+		free(temp);
+		temp = next_node;
 	}
-    printf("todas las variables de entorno has sido procesadas y generadas\n");
+	mini->first_node = NULL;
 }
 
+/*
 int main(int argc, char **argv, char **envp)
 {
 	t_mini	mini;
@@ -271,4 +124,4 @@ int main(int argc, char **argv, char **envp)
     printf("Llega hasta el fuincla del printf, el fallo esta fuera de estas funciones\n");
 	free_env(&mini);
 	return (0);
-}
+}*/

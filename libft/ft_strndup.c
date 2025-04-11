@@ -1,22 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstlast_bonus.c                                 :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ksudyn <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 17:49:57 by ksudyn            #+#    #+#             */
-/*   Updated: 2024/10/11 15:35:57 by ksudyn           ###   ########.fr       */
+/*   Created: 2025/04/11 17:22:05 by ksudyn            #+#    #+#             */
+/*   Updated: 2025/04/11 17:22:31 by ksudyn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-t_env	*ft_lstlast(t_env *lst)
+char    *ft_strndup(const char *s, size_t len)
 {
-	if (!lst)
-		return (NULL);
-	while (lst->next != NULL)
-		lst = lst->next;
-	return (lst);
+    char    *dest;
+    char    *start;
+    size_t  i;
+
+    if (s == NULL)
+        return (NULL);
+    dest = (char *)malloc(len + 1);
+    if (dest == NULL)
+        return (NULL);
+
+    start = dest;
+    for (i = 0; i < len && s[i] != '\0'; i++)
+        *dest++ = s[i];
+    *dest = '\0';
+
+    return (start);
 }

@@ -11,71 +11,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-//FUNCIONES DE LIBFT
-
-int	ft_isdigit( int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
-
-char	*ft_strchr(const char *s, int c)
-{
-	c = (unsigned char)c;
-	if (s == NULL)
-		return (NULL);
-	while (*s)
-	{
-		if (*s == c)
-			return ((char *)s);
-		s++;
-	}
-	if (c == '\0')
-		return ((char *)s);
-	return (NULL);
-}
-
-size_t	ft_strlen(const char *str)
-{
-	size_t	i;
-
-	i = 0;
-	if (str == NULL)
-		return (0);
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-
-char	*ft_strtrim(char const *s1, char const *set)
-{
-	char	*result;
-	int		start;
-	int		end;
-	int		i;
-
-	if (!s1 || !set)
-		return (NULL);
-	start = 0;
-	while (s1[start] && ft_strchr(set, s1[start]))
-		start++;
-	end = ft_strlen(s1) - 1;
-	while (end > start && ft_strchr(set, s1[end]))
-		end--;
-	result = (char *)malloc((end - start + 2) * sizeof(char));
-	if (!result)
-		return (NULL);
-	i = 0;
-	while (start <= end)
-		result[i++] = s1[start++];
-	result[i] = '\0';
-	return (result);
-}
-//FIN FUNCIONES LIBFT
+# include "../../libft/libft.h"
 
 int check_long_number(char *str)
 {
@@ -108,7 +44,7 @@ int check_long_number(char *str)
 
 int transform_number(char *str, long long *result)
 {
-    unsigned long long digit;
+    long long digit;
     int sign;
     int i;
 
@@ -211,7 +147,7 @@ int ft_exit(char **exit_args)
 //MAIN CREADO POR CHATGPT PARA COMPROBAR SI FUNCIONA BIEN
 
 // Aquí van tus funciones check_long_number, transform_number, final_numbers, multiple_args, ft_exit
-
+/*
 int main(void)
 {
     char input[1024];
@@ -263,4 +199,4 @@ int main(void)
 
     return 0;
 }
-
+*/

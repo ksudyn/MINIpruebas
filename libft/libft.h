@@ -28,6 +28,13 @@
 
 # define MAX_FD 1024
 
+int	ft_isalpha(int c);
+int	ft_isalnum(int c);
+int	ft_strcmp(const char *s1, const char *s2);
+char    *ft_strdup(const char *s);
+char    *ft_strndup(const char *s, size_t len);
+char	*ft_strtrim(char const *s1, char const *set);
+
 int					ft_isdigit(int c);
 size_t				ft_strlen(const char *s);
 void				*ft_memcpy(void *dst, const void *src, size_t n);
@@ -59,6 +66,7 @@ typedef struct s_node
 
 	int				index;
 }					t_node;
+
 
 //t_node				*ft_lstnew(void *content);
 void				ft_lstadd_front(t_node **lst, t_node *new);

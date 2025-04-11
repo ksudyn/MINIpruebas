@@ -10,168 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-
-
-//FUNCIONES DE LA LIBFT
-int	ft_isalpha(int c)
-{
-	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
-		return (1);
-	return (0);
-}
-int	ft_isdigit( int c)
-{
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
-}
-int	ft_isalnum(int c)
-{
-	if (ft_isalpha (c) || ft_isdigit (c))
-		return (1);
-	return (0);
-}
-
-int	ft_lstsize(t_list *lst)
-{
-	int	i;
-
-	i = 0;
-	if (!lst)
-		return (0);
-	while (lst != NULL)
-	{
-		i++;
-		lst = lst->next;
-	}
-	return (i);
-}
-
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	int	i;
-
-	i = 0;
-	if (s1 == NULL || s2 == NULL)
-		return (0);
-	while (s1[i] != '\0' || s2[i] != '\0')
-	{
-		if (s1[i] != s2[i])
-			return (s1[i] - s2[i]);
-		i++;
-	}
-	return (0);
-}
-
-
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	if (s == NULL)
-		return (NULL);
-	while (s[i] != '\0')
-	{
-		if ((char)c == s[i])
-			return ((char *)&s[i]);
-		i++;
-	}
-	if ((char)c == '\0')
-		return ((char *)&s[i]);
-	return (NULL);
-}
-
-void	*ft_calloc(size_t nmemb, size_t size)
-{
-	size_t			total_size;
-	unsigned char	*ptr;
-
-	ptr = malloc(size * nmemb);
-	if (ptr == NULL)
-		return (NULL);
-	total_size = 0;
-	while (total_size < (size * nmemb))
-	{
-		ptr[total_size] = 0;
-		total_size++;
-	}
-	return ((void *)ptr);
-}
-
-size_t	ft_strlen(const char *str)
-{
-	size_t	i;
-
-	i = 0;
-	if (str == NULL)
-		return (0);
-	while (str[i] != '\0')
-	{
-		i++;
-	}
-	return (i);
-}
-
-t_list *ft_lstnew(void *content)
-{
-    t_list *new_node;
-
-    new_node = (t_list *)malloc(sizeof(t_list));
-    if (!new_node)
-        return (NULL);
-    new_node->content = content;
-    new_node->next = NULL;
-    new_node->prev = NULL;
-    return (new_node);
-}
-
-void ft_lstadd_back(t_list **lst, t_list *new)
-{
-    t_list *temp;
-
-    if (!*lst || !new)
-    {
-        *lst = new;
-        return ;
-    }
-    temp = ft_lstlast(*lst);
-    temp->next = new;
-    new->prev = temp;
-}
-
-
-t_list	*ft_lstlast(t_list *lst)
-{
-	if (!lst)
-		return (NULL);
-	while (lst->next != NULL)
-		lst = lst->next;
-	return (lst);
-}
-
-
-char	*ft_strdup(const char *s)
-{
-	char	*dst;
-	int		i;
-
-	i = 0;
-	dst = ft_calloc(ft_strlen(s) + 1, sizeof(char));
-	if (!dst)
-		return (NULL);
-	while (s[i])
-	{
-		dst[i] = s[i];
-		i++;
-	}
-	dst[i] = '\0';
-	return (dst);
-}
-
-//TERMINAN FUNCIONES LIBFT
+#include "../minishell.h"
+# include "../../libft/libft.h"
 
 int is_valid_variable(char *var)
 {
@@ -305,7 +145,7 @@ int ft_export(char **args, t_mini *mini)
 {
     if (!args[1])
     {
-        mini->total_nodes = ft_lstsize(mini->first_node);
+        mini->total_nodes = ft_lstsize_mini(mini->first_node);
         nodes_order(mini);
         print_export_list(mini);
         return (0);
@@ -325,7 +165,7 @@ int ft_export(char **args, t_mini *mini)
 
 
 //UN MAIN CREADO CON CHATGPT PATA VER SI FUNCIONA
-
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -335,7 +175,7 @@ int main() {
     t_mini mini;
     mini.first_node = NULL;
     mini.total_nodes = 0;
-
+    printf("aqui llega\n");
     // Agregar algunas variables de entorno iniciales
     add_or_update_variable(&mini, "USER", "alice");
     add_or_update_variable(&mini, "HOME", "/home/alice");
@@ -366,3 +206,4 @@ int main() {
 
     return 0;
 }
+*/

@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+# include "../../libft/libft.h"
 
 void ft_pwd(void)
 {
@@ -42,7 +43,7 @@ void ft_pwd(void)
 //devuelve la ruta completa del directorio de trabajo actual donde el programa está ejecutándose
 
 //MAIN GENERADO POR CHAT GPT PARA COMPROBAR
-
+/*
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -70,4 +71,4 @@ int main(void)
     }
 
     return 0;
-}
+}*/

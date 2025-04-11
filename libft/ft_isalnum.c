@@ -1,26 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstadd_back_bonus.c                             :+:      :+:    :+:   */
+/*   ft_isalnum.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ksudyn <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 18:00:45 by ksudyn            #+#    #+#             */
-/*   Updated: 2024/10/10 19:19:23 by ksudyn           ###   ########.fr       */
+/*   Created: 2025/04/11 17:07:00 by ksudyn            #+#    #+#             */
+/*   Updated: 2025/04/11 17:07:16 by ksudyn           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void ft_lstadd_back(t_env **lst, t_env *new)
+int	ft_isalnum(int c)
 {
-    t_env *temp;
-
-    if (!*lst || !new)
-    {
-        *lst = new;
-        return ;
-    }
-    temp = ft_lstlast(*lst);
-    temp->next = new;
+	if (ft_isalpha (c) || ft_isdigit (c))
+		return (1);
+	return (0);
 }

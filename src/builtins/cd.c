@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
+# include "../../libft/libft.h"
 //LAS UTILIZAN  PWD SE USAN EN LAS FUNCIONES CD, LUEGO SE USARA EL .H Y SE PODRAN QUITAR CUNADO TODO ESTE JUNTO
 void previous_pwd(void)
 {
@@ -38,6 +39,8 @@ void new_pwd(char *new_path)
 }
 
 //FUNCIONES QUE FT_CD USARA, LUEGO SE MODIFICARAN EN BASE AL TYPEDEF STRUCT
+
+//Esta función está diseñada para cambiar al directorio especificado por el usuario.
 int cd_argument(char *path)
 {
     if (chdir(path) == -1)
@@ -51,6 +54,7 @@ int cd_argument(char *path)
     return 0;
 }
 
+//Esta función está diseñada para cambiar al directorio de inicio del usuario ($HOME).
 int cd_home(void)
 {
     char *home;
@@ -68,7 +72,7 @@ int cd_home(void)
 }
 //Chdir sirve para cambiar de carpeta (directorio) en la computadora.
 
-
+//La función ft_cd es la encargada de manejar el comando cd de acuerdo a los argumentos que recibe.
 void ft_cd(char **args)
 {
     int i;
@@ -98,7 +102,7 @@ void ft_cd(char **args)
 //Chdir sirve para cambiar de carpeta (directorio) en la computadora.
 //getcwd(NULL, 0) Obtiene la ruta actual.
 
-
+/*
 //main generado por chatgpt para ver funcionamien//POR REVISAR TODO
 #include <stdio.h>
 #include <stdlib.h>
@@ -133,4 +137,4 @@ int main(void)
 
     free(input);
     return 0;
-}
+}*/

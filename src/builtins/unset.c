@@ -10,23 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
-
-int	ft_strcmp(const char *s1, const char *s2)
-{
-	int	i;
-
-	i = 0;
-	if (s1 == NULL || s2 == NULL)
-		return (0);
-	while (s1[i] != '\0' || s2[i] != '\0')
-	{
-		if (s1[i] != s2[i])
-			return (s1[i] - s2[i]);
-		i++;
-	}
-	return (0);
-}
+#include "../minishell.h"
+# include "../../libft/libft.h"
 
 int ft_unset_env(t_mini *mini, char *variable)
 {
@@ -35,7 +20,7 @@ int ft_unset_env(t_mini *mini, char *variable)
     node = mini->first_node;
     while (node)
     {
-        if (strcmp(node->variable, variable) == 0)
+        if (ft_strcmp(node->variable, variable) == 0)
         {
             if (node->prev == NULL)
                 mini->first_node = node->next;
@@ -57,6 +42,8 @@ int ft_unset_env(t_mini *mini, char *variable)
     return (1);
 }
 
+// Función principal de prueba
+
 int ft_unset(t_mini *mini, char **args)
 {
     int i;
@@ -76,14 +63,15 @@ int ft_unset(t_mini *mini, char **args)
         }
         else
         {
-        ft_unset_env(mini, args[i]);
-        i++;
+            ft_unset_env(mini, args[i]);
+            i++;
         }
     }
     return (0);
 }
 
-//MAIN GENERADO POR CHATGPT
+
+/*
 // Función para imprimir la lista de variables de entorno
 void print_env(t_mini *mini)
 {
@@ -95,64 +83,4 @@ void print_env(t_mini *mini)
         current = current->next;
     }
     printf("\n");
-}
-
-// Función para crear un nodo de entorno
-t_list *create_env_node(char *var, char *value)
-{
-    t_list *new = malloc(sizeof(t_list));
-    if (!new)
-        return NULL;
-    new->variable = strdup(var);
-    new->content = strdup(value);
-    new->next = NULL;
-    new->prev = NULL;
-    return new;
-}
-
-// Función para agregar una variable al entorno (al final de la lista)
-void add_env_var(t_mini *mini, char *var, char *value)
-{
-    t_list *new = create_env_node(var, value);
-    t_list *temp = mini->first_node;
-
-    if (!mini->first_node)
-        mini->first_node = new;
-    else
-    {
-        while (temp->next)
-            temp = temp->next;
-        temp->next = new;
-        new->prev = temp;
-    }
-    mini->total_nodes++;
-}
-
-
-// Función principal de prueba
-int main(int argc, char **argv)
-{
-    (void)argc;
-    
-    // Inicializar estructura
-    t_mini mini;
-    mini.first_node = NULL;
-    mini.total_nodes = 0;
-
-    // Agregar variables de entorno
-    add_env_var(&mini, "USER", "root");
-    add_env_var(&mini, "HOME", "/home/root");
-    add_env_var(&mini, "PATH", "/usr/bin:/bin");
-    add_env_var(&mini, "SHELL", "/bin/bash");
-
-    // Imprimir antes de unset
-    print_env(&mini);
-
-    // Ejecutar unset con los argumentos de entrada
-    ft_unset(&mini, argv);
-
-    // Imprimir después de unset
-    print_env(&mini);
-
-    return 0;
-}
+}*/
