@@ -38,6 +38,7 @@ void ft_pwd(void)
         printf("%s\n", cwd);
         free(cwd);
     }
+    printf("se ha usado mi pwd\n");
 }
 //La función getcwd (que significa get current working directory, en español obtener el directorio de trabajo actual)
 //devuelve la ruta completa del directorio de trabajo actual donde el programa está ejecutándose

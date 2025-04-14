@@ -85,21 +85,60 @@ void execute_builtins(t_mini *mini, char **args)
         ft_unset(mini, args);
 }
 
-
+/*
 int main(int argc, char **argv, char **envp)
 {
     t_mini mini;
+    mini.first_node = NULL;
+    mini.total_nodes = 0;
+
     char *args[] = {"env", NULL};  // Un ejemplo de argumento para probar el comando "env"
     (void)argc;
     (void)argv;
+
     // Inicializar la lista de entorno a partir del envp del sistema
     init_env_list(&mini, envp);
     
     // Probar la ejecución de un builtin (como 'env')
     execute_builtins(&mini, args);
-
     // Liberar memoria antes de finalizar el programa
     free_env_list(&mini);
 
     return 0;
+}*/
+
+#include <readline/readline.h>
+#include <readline/history.h>
+
+int main(int argc, char **argv, char **envp)
+{
+	t_mini mini;
+	char *input;
+
+	(void)argc;
+	(void)argv;
+
+	// Inicializar el entorno
+	mini.first_node = NULL;
+	mini.total_nodes = 0;
+	init_env_list(&mini, envp);
+
+	while (1)
+	{
+		input = readline("minishell$ ");
+		if (!input)
+			break;
+
+		if (*input)
+			add_history(input);
+
+		// Acá deberías parsear y ejecutar lo que escribió el usuario.
+		char *args[] = {input, NULL};
+		execute_builtins(&mini, args);
+
+		free(input);
+	}
+	
+	free_env_list(&mini);
+	return 0;
 }

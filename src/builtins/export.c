@@ -151,6 +151,7 @@ int ft_export(char **args, t_mini *mini)
         return (0);
     }
     return (export_args(args, mini));
+    printf("se ha usado mi export\n");
 }
 
 //Si se llama sin argumentos,

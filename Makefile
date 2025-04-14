@@ -18,7 +18,7 @@ SRCS_LIB := $(addprefix ./libft/, \
 OBJS = $(SRCS:.c=.o) $(SRCS_LIB:.c=.o)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) -lreadline -o $(NAME)
 
 all: $(NAME)
 

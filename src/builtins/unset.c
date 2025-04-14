@@ -67,6 +67,7 @@ int ft_unset(t_mini *mini, char **args)
             i++;
         }
     }
+    printf("se ha usado mi unset\n");
     return (0);
 }
 

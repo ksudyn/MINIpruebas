@@ -96,6 +96,7 @@ void ft_cd(char **args)
         if (cd_argument(args[1]) != 0)
             return;
     }
+    printf("se ha usado mi cd\n");
 }
 //Getenv busca en la libreta de la computadora y devuelve el valor de una variable de entorno.
 //la busca y si existe la ejecuta

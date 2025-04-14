@@ -90,7 +90,7 @@ int ft_env(char **args, t_mini *mini)
         }
         temp = temp->next;
     }
-
+	printf("se ha usado mi env\n");
     return (0);
 }
 

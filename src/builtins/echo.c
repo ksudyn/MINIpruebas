@@ -78,6 +78,7 @@ void	ft_echo(char **args)
 
 	if (new_line)
 		printf("\n");
+	printf("se ha usado mi echo\n");
 }
 /*
 int main(int argc, char **argv)

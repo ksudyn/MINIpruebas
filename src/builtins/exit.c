@@ -33,8 +33,8 @@ int check_long_number(char *str)
         if (!ft_isdigit(str[i]))
 			return (0);
 		digit = str[i] - '0';
-		if (result > LLONG_MAX / 10
-			|| (result == LLONG_MAX / 10 && digit > (LLONG_MAX % 10) + sign))
+		if (result > LLONG_MAX / 10 || 
+            (result == LLONG_MAX / 10 && digit > (LLONG_MAX % 10) + sign))
 			return (0);
 		result = result * 10 + digit;
         i++;
@@ -96,6 +96,7 @@ int final_numbers(char *str, long long *result)
 
 int multiple_args(char **exit_args, int argc)
 {
+    printf("se entra en multiple_args\n");
     long long exit_code;
     char *trimmed_arg;
 
@@ -119,28 +120,34 @@ int multiple_args(char **exit_args, int argc)
         printf("minishell: exit: too many arguments\n");
         return (-1);
     }
-
     return (exit_code % 256);
 }
 
 int ft_exit(char **exit_args)
 {
+    printf("ft_exit llamado\n");
     int i;
     int exit_status;
 
     i = 0;
     while (exit_args[i])
         i++;
+    printf("Número de argumentos: %d\n", i);
 
     if (i == 1)
-        return (0); // Si no hay argumentos, salir con código 0
-
+    {
+        printf("se ha usado mi exit\n");
+        exit (0);
+    }
     exit_status = multiple_args(exit_args, i);
     
     if (exit_status == -1)
-        return (1); // No se sale del shell si hay "too many arguments"
-
-    return(exit_status);
+    {
+        printf("se ha usado mi exit pero no sale por muchos argumentos\n");
+        return (1);
+    }
+    printf("se ha usado mi exit con numeros\n");
+    exit(exit_status);
 }
 
 
