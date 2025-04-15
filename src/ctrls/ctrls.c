@@ -10,34 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-// rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history
-#include <readline/readline.h>
-#include <readline/history.h>
-// signal, sigaction
-#include <signal.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <signal.h>
-#include <unistd.h>
-#include <readline/readline.h>
-#include <readline/history.h>
-
-typedef struct s_shell
-{
-    int last_exit_status;
-} t_shell;
-// last_exit_status: guarda el código de salida del último comando ejecutado.
-// Se usa en las funciones de manejo de señales para recordar el estado de salida
+#include "../minishell.h"
 
 void ctrl_minishell(int signal, t_shell *shell)
 {
     if (signal == SIGINT)
     {
+        printf("🔴 Se ha usado Ctrl-C\n");
         rl_replace_line("", 0);
         write(1, "\n", 1);
         rl_on_new_line();
@@ -46,6 +25,7 @@ void ctrl_minishell(int signal, t_shell *shell)
     }
     else if (signal == SIGQUIT)
     {
+        printf("🔵 Se ha usado Ctrl-\\\n");
         rl_on_new_line();
         rl_redisplay();
     }
@@ -57,9 +37,13 @@ void ctrl_minishell(int signal, t_shell *shell)
 void ctrl_child(int signal, t_shell *shell)
 {
     if (signal == SIGINT)
+    {
+        printf("❌ Ctrl-C en hijo\n");
         shell->last_exit_status = 130;
+    }
     else if (signal == SIGQUIT)
     {
+        printf("❌ Ctrl-\\ en hijo\n");
         write(1, "Quit: 3\n", 8);
         shell->last_exit_status = 131;
     }
@@ -89,28 +73,29 @@ void	ctrls(int is_child)
 
 //MAIN GENERADO POR CHRGPT PARA COMPROBAR
 
-int main(void)
-{  // Inicializa la estructura con el estado de salida a 0
+// int main(void)
+// {  // Inicializa la estructura con el estado de salida a 0
 
-    // Configura los manejadores de señales para el proceso principal
-    ctrls(0);
+//     // Configura los manejadores de señales para el proceso principal
+//     ctrls(0);
 
-    // Bucle principal del minishell
-    while (1)
-    {
-        char *input = readline("minishell> ");
-        if (!input)
-        {
-            printf("exit\n");
-            break;  // Sale del shell si el usuario presiona Ctrl-D
-        }
+//     // Bucle principal del minishell
+//     while (1)
+//     {
+//         char *input = readline("minishell> ");
+//         if (!input)
+//         {
+//             printf("🟡 Se ha usado Ctrl-D\n");
+//             printf("exit\n");
+//             break;  // Sale del shell si el usuario presiona Ctrl-D
+//         }
 
-        // Si la entrada no está vacía, añade al historial
-        if (*input)
-            add_history(input);
+//         // Si la entrada no está vacía, añade al historial
+//         if (*input)
+//             add_history(input);
 
-        free(input);  // Libera la memoria asignada por readline
-    }
+//         free(input);  // Libera la memoria asignada por readline
+//     }
 
-    return 0;
-}
+//     return 0;
+// }

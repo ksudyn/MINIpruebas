@@ -90,22 +90,21 @@ void	free_env_list(t_mini *mini)
 }//esta libera la memoria del envp que tú has creado y almacenado en tu estructura t_mini,
 //cuando cierras tu minishell o ya no necesitas esa copia
 
-/*
-int	main(int argc, char **argv, char **envp)
-{
-	t_mini mini;
 
-	(void)argc;
-	(void)argv;
-	mini.first_node = NULL;
-	mini.total_nodes = 0;
+// int	main(int argc, char **argv, char **envp)
+// {
+// 	t_mini mini;
 
-	init_env_list(&mini, envp);
+// 	(void)argc;
+// 	(void)argv;
+// 	mini.first_node = NULL;
+// 	mini.total_nodes = 0;
 
-    printf("🌱 Entorno copiado:\n");
-	print_env(&mini);
-	// Aquí puedes usar mini.first_node para export, env, unset, etc.
+// 	init_env_list(&mini, envp);
 
-	free_env_list(&mini);
-	return (0);
-}*/
+//     printf("🌱 Entorno copiado:\n");
+// 	// Aquí puedes usar mini.first_node para export, env, unset, etc.
+
+// 	free_env_list(&mini);
+// 	return (0);
+// }

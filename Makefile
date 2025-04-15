@@ -4,8 +4,18 @@ CC = cc
 HEADERS = -I ./includes
 CFLAGS = -Wall -Wextra -Werror $(HEADERS)
 
-SRCS := $(addprefix src/builtins/, \
-	cd.c  cpy_envp.c echo.c  env.c  exit.c  export.c  pwd.c  unset.c utils.c)
+SRCS := \
+	src/main/main.c \
+	src/builtins/cd.c \
+	src/builtins/cpy_envp.c \
+	src/builtins/echo.c \
+	src/builtins/env.c \
+	src/builtins/exit.c \
+	src/builtins/export.c \
+	src/builtins/pwd.c \
+	src/builtins/unset.c \
+	src/builtins/utils.c \
+	src/ctrls/ctrls.c
 
 SRCS_LIB := $(addprefix ./libft/, \
 	ft_putchar.c	ft_isdigit.c ft_putchar_fd.c	ft_substr.c ft_hexadec.c	ft_putnbr.c\

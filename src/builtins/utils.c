@@ -107,38 +107,3 @@ int main(int argc, char **argv, char **envp)
     return 0;
 }*/
 
-#include <readline/readline.h>
-#include <readline/history.h>
-
-int main(int argc, char **argv, char **envp)
-{
-	t_mini mini;
-	char *input;
-
-	(void)argc;
-	(void)argv;
-
-	// Inicializar el entorno
-	mini.first_node = NULL;
-	mini.total_nodes = 0;
-	init_env_list(&mini, envp);
-
-	while (1)
-	{
-		input = readline("minishell$ ");
-		if (!input)
-			break;
-
-		if (*input)
-			add_history(input);
-
-		// Acá deberías parsear y ejecutar lo que escribió el usuario.
-		char *args[] = {input, NULL};
-		execute_builtins(&mini, args);
-
-		free(input);
-	}
-	
-	free_env_list(&mini);
-	return 0;
-}

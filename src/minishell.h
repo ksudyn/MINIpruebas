@@ -14,12 +14,18 @@
 # define MINISHELL_H
 
 # include "../libft/libft.h"
-
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <sys/wait.h>
+// rl_clear_history, rl_on_new_line, rl_replace_line, rl_redisplay, add_history
+#include <readline/readline.h>
+#include <readline/history.h>
+// signal, sigaction
+#include <signal.h>
+
 
 typedef struct t_list
 {
@@ -36,6 +42,13 @@ typedef struct s_mini
     t_list   *node_inter;        // Iterador temporal para recorrer la lista
     int     total_nodes;    // Número total de variables en la lista
 }   t_mini;
+
+typedef struct s_shell
+{
+    int last_exit_status;
+} t_shell;
+// last_exit_status: guarda el código de salida del último comando ejecutado.
+// Se usa en las funciones de manejo de señales para recordar el estado de salida
 
 ////...........////BUILTINS
 void ft_cd(char **args);
@@ -54,5 +67,9 @@ int	ft_lstsize_mini(t_list *lst);
 t_list	*ft_lstlast(t_list *lst);
 t_list *ft_lstnew(void *content);
 
+////...........////CTRLS
+void ctrls(int is_child);
+void ctrl_minishell(int signal, t_shell *shell);
+void ctrl_child(int signal, t_shell *shell);
 
 #endif
