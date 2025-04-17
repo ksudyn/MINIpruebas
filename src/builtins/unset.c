@@ -42,35 +42,45 @@ int ft_unset_env(t_mini *mini, char *variable)
     return (1);
 }
 
+
+int process_unset_argument(t_mini *mini, char *arg)
+{
+    if (ft_strchr(arg, '='))
+    {
+        char *var_name = ft_strndup(arg, ft_strchr(arg, '=') - arg);
+        if (var_name)
+        {
+            ft_unset_env(mini, var_name);
+            free(var_name);
+        }
+    }
+    else if (ft_strcmp(arg, "_") != 0 && ft_strcmp(arg, "?") != 0)
+    {
+        ft_unset_env(mini, arg);
+    }
+    return 0;
+}
+
 // Función principal de prueba
 
 int ft_unset(t_mini *mini, char **args)
 {
     int i;
-    int len;
-
-    len = 0;
-    while(args[len])
-        len++;
-    if(len == 1)
-        return (0);
+    
     i = 1;
+    if (!args[1])
+        return 0;
+
     while (args[i])
     {
-        if (ft_strcmp(args[i], "_") == 0 || ft_strcmp(args[i], "?") == 0)
-        {
-            i++;
-        }
-        else
-        {
-            ft_unset_env(mini, args[i]);
-            i++;
-        }
-    }
+        process_unset_argument(mini, args[i]);
+        i++;
+    } 
     printf("se ha usado mi unset\n");
-    return (0);
+    return 0;
 }
 
+//Con esta funcion se elimina si se escribe un = y tambien si no se escribe
 
 /*
 // Función para imprimir la lista de variables de entorno

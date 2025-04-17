@@ -64,6 +64,46 @@ t_list *ft_lstnew(void *content)
     return (new_node);
 }
 
+t_list	*new_doble_node(char *token)
+{
+	t_list	*new_node;
+
+	new_node = malloc(1 * sizeof(t_list));
+	if (!new_node)
+		return (free(token), NULL);
+	new_node->cmd_arg = NULL;
+	new_node->cmd_name = NULL;
+	new_node->cmd_path = NULL;
+	new_node->content = ft_strtrim(token, " \t\v\n\r\b\f");
+	if (!new_node->content)
+		return (free(new_node), free(token), NULL);
+	return (new_node->next = NULL, new_node->prev = NULL, new_node);
+}
+
+int	node_to_end(t_list **list, t_list *insert)
+{
+	t_list	*temp;
+
+	if (!insert)
+		return (-1);
+	if (*list == NULL)
+	{
+		*list = insert;
+		insert->next = NULL;
+		insert->prev = NULL;
+	}
+	else
+	{
+		temp = *list;
+		while (temp->next != NULL)
+			temp = temp->next;
+		temp->next = insert;
+		insert->next = NULL;
+		insert->prev = temp;
+	}
+	return (1);
+}
+
 void execute_builtins(t_mini *mini, char **args)
 {
     if (args[0] == NULL)
@@ -83,6 +123,27 @@ void execute_builtins(t_mini *mini, char **args)
         ft_pwd();
     else if (ft_strcmp(args[0], "unset") == 0)
         ft_unset(mini, args);
+}
+
+int	is_builtin(char *cmd)
+{
+	if (!cmd)
+		return (0);
+	if (ft_strncmp(cmd, "cd", 3) == 0)
+		return (1);
+	else if (ft_strncmp(cmd, "echo", 5) == 0)
+		return (1);
+	else if (ft_strncmp(cmd, "env", 4) == 0)
+		return (1);
+	else if (ft_strncmp(cmd, "exit", 5) == 0)
+		return (1);
+	else if (ft_strncmp(cmd, "export", 7) == 0)
+		return (1);
+	else if (ft_strncmp(cmd, "pwd", 4) == 0)
+		return (1);
+	else if (ft_strcmp(cmd, "unset") == 0)
+		return (1);
+	return (0);
 }
 
 /*

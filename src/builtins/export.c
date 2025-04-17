@@ -58,11 +58,11 @@ void add_or_update_variable(t_mini *mini, char *var, char *value)
         node = node->next;
     }
     // Si la variable no existe, crear un nuevo nodo
-    new_node = ft_lstnew(var);
+    new_node = new_doble_node(var);//cambio de funciones
     if (!new_node)
         return;
     // Agregar el nuevo nodo al final de la lista
-    ft_lstadd_back(&mini->first_node, new_node);
+    node_to_end(&mini->first_node, new_node);//cambio de funciones
 }
 
 void nodes_order(t_mini *mini)
@@ -150,8 +150,8 @@ int ft_export(char **args, t_mini *mini)
         print_export_list(mini);
         return (0);
     }
-    return (export_args(args, mini));
     printf("se ha usado mi export\n");
+    return (export_args(args, mini));
 }
 
 //Si se llama sin argumentos,

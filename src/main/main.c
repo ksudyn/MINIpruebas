@@ -43,7 +43,12 @@ int main(int argc, char **argv, char **envp)
 
 		args = ft_split(input, ' '); // Separar por espacios
 		if (args && args[0])
-			execute_builtins(&mini, args);
+		{
+			if(is_builtin(args[0]))
+				execute_builtins(&mini, args);
+			else
+				execute_command(&mini, args);
+		}
 
 		// Liberar memoria
 		i = 0;

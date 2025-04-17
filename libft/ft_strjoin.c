@@ -33,6 +33,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (j < size_s2)
 		str[i++] = s2[j++];
 	str[i] = '\0';
-	free(s1);
+	//free(s1);
 	return (str);
 }

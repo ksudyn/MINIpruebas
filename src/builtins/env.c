@@ -15,31 +15,6 @@
 
 //UTILS PARA ESTAS FUNCIONES
 
-int	node_to_end(t_list **list, t_list *insert)
-{
-	t_list	*temp;
-
-	if (!insert)
-		return (-1);
-	if (*list == NULL)
-	{
-		*list = insert;
-		insert->next = NULL;
-		insert->prev = NULL;
-	}
-	else
-	{
-		temp = *list;
-		while (temp->next != NULL)
-			temp = temp->next;
-		temp->next = insert;
-		insert->prev = temp;
-		insert->next = NULL;
-	}
-	return (1);
-}
-
-
 t_list	*env_new(char *env_var)
 {
 	t_list	*new_node;
