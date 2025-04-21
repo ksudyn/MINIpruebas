@@ -11,7 +11,31 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-# include "../../libft/libft.h"
+
+void previous_pwd(void)
+{
+    char *oldpwd;;
+
+    oldpwd = getenv("PWD");
+
+    if (oldpwd)
+        setenv("OLDPWD", oldpwd, 1);
+}
+//Getenv busca en la libreta de la computadora y devuelve el valor de una variable de entorno.
+//la busca y si existe la ejecuta
+
+void new_pwd(char *new_path)
+{
+    if (!new_path)
+        new_path = getcwd(NULL, 0);
+    if (!new_path)
+    {
+        perror("getcwd");
+        return ;
+    }
+    setenv("PWD", new_path, 1);
+    free(new_path);
+}
 
 void ft_pwd(void)
 {
@@ -42,34 +66,3 @@ void ft_pwd(void)
 }
 //La función getcwd (que significa get current working directory, en español obtener el directorio de trabajo actual)
 //devuelve la ruta completa del directorio de trabajo actual donde el programa está ejecutándose
-
-//MAIN GENERADO POR CHAT GPT PARA COMPROBAR
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-int main(void)
-{
-    while (1)
-    {
-        printf("minishell> ");
-        
-        char input[1024];
-        if (fgets(input, sizeof(input), stdin) == NULL)
-            break;
-
-        input[strcspn(input, "\n")] = '\0';  // Eliminar salto de línea al final
-
-        if (strcmp(input, "exit") == 0)
-            break;
-
-        // Si el comando es "pwd"
-        if (strcmp(input, "pwd") == 0)
-        {
-            ft_pwd();  // Llamamos a la función para mostrar el directorio actual
-        }
-    }
-
-    return 0;
-}*/

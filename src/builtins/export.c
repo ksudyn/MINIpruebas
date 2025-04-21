@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-# include "../../libft/libft.h"
 
 int is_valid_variable(char *var)
 {
@@ -58,7 +57,7 @@ void add_or_update_variable(t_mini *mini, char *var, char *value)
         node = node->next;
     }
     // Si la variable no existe, crear un nuevo nodo
-    new_node = new_doble_node(var);//cambio de funciones
+    new_node = new_node_export(var, value);//cambio de funciones
     if (!new_node)
         return;
     // Agregar el nuevo nodo al final de la lista
@@ -86,7 +85,7 @@ void nodes_order(t_mini *mini)
         node = node->next;
     }
 }
-
+/*
 void print_export_list(t_mini *mini)
 {
     t_list *node;
@@ -110,7 +109,41 @@ void print_export_list(t_mini *mini)
 
         node = node->next;
     }
+}*/
+
+void print_export_list(t_mini *mini)
+{
+    t_list *node;
+    int printed = 0;
+    int total = ft_lstsize_mini(mini->first_node); // Asume que esta función ya existe
+    int current_order = 0;
+
+    nodes_order(mini); // Asigna el "order" a cada nodo
+
+    while (printed < total)
+    {
+        node = mini->first_node;
+        while (node)
+        {
+            if (node->order == current_order)
+            {
+                // Ignora la variable "_" como especificaste
+                if (!(ft_strlen(node->variable) == 1 && node->variable[0] == '_'))
+                {
+                    if (node->content)
+                        printf("declare -x %s=\"%s\"\n", node->variable, node->content);
+                    else
+                        printf("declare -x %s\n", node->variable);
+                }
+                printed++;
+                break; // Avanza al siguiente "order"
+            }
+            node = node->next;
+        }
+        current_order++;
+    }
 }
+
 
 int export_args(char **args, t_mini *mini)
 {

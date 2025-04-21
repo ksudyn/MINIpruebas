@@ -11,33 +11,6 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-# include "../../libft/libft.h"
-
-/*
-void	ft_echo(char **args)
-{
-	int	i;
-	int	new_line;
-
-	i = 1;
-	new_line = 1;
-	if (args[1] && ft_strncmp(args[1], "-n", 2) == 0)
-	{
-		new_line = 0;
-		i++;
-	}
-
-	while(args[i])
-	{
-		printf("%s", args[i]);
-		if(args[i + 1])
-			printf(" ");
-		i++;
-	}
-
-	if(new_line == 1)
-		printf("\n");
-}*/
 
 int	is_n_flag(const char *str)
 {
@@ -80,14 +53,3 @@ void	ft_echo(char **args)
 		printf("\n");
 	printf("se ha usado mi echo\n");
 }
-/*
-int main(int argc, char **argv)
-{
-	if(argc > 1)
-		ft_echo(argv);
-	else
-		printf("\n");
-
-	return 0;
-}
-*/

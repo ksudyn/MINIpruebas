@@ -41,7 +41,7 @@ int main(int argc, char **argv, char **envp)
 		if (*input)
 			add_history(input);
 
-		args = ft_split(input, ' '); // Separar por espacios
+		args = ft_split(input, ' ');
 		if (args && args[0])
 		{
 			if(is_builtin(args[0]))
@@ -50,7 +50,6 @@ int main(int argc, char **argv, char **envp)
 				execute_command(&mini, args);
 		}
 
-		// Liberar memoria
 		i = 0;
 		while (args && args[i])
 			free(args[i++]);

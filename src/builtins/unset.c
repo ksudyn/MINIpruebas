@@ -42,7 +42,6 @@ int ft_unset_env(t_mini *mini, char *variable)
     return (1);
 }
 
-
 int process_unset_argument(t_mini *mini, char *arg)
 {
     if (ft_strchr(arg, '='))
@@ -61,8 +60,6 @@ int process_unset_argument(t_mini *mini, char *arg)
     return 0;
 }
 
-// Función principal de prueba
-
 int ft_unset(t_mini *mini, char **args)
 {
     int i;
@@ -79,19 +76,4 @@ int ft_unset(t_mini *mini, char **args)
     printf("se ha usado mi unset\n");
     return 0;
 }
-
 //Con esta funcion se elimina si se escribe un = y tambien si no se escribe
-
-/*
-// Función para imprimir la lista de variables de entorno
-void print_env(t_mini *mini)
-{
-    t_list *current = mini->first_node;
-    printf("\nLista de variables de entorno:\n");
-    while (current)
-    {
-        printf("%s=%s\n", current->variable, current->content);
-        current = current->next;
-    }
-    printf("\n");
-}*/
