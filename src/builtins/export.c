@@ -12,29 +12,6 @@
 
 #include "../minishell.h"
 
-int is_valid_variable(char *var)
-{
-    int i;
-    
-    i  = 0;
-    if (!var || !var[0])
-        return 0;
-
-    if (!ft_isalpha(var[0]) && var[0] != '_')
-        return 0;
-
-    while (var[i])
-    {
-        if (!ft_isalnum(var[i]) && var[i] != '_')
-            return 0;
-        i++;
-    }
-
-    return 1;  // Es válido
-}
-// Debe empezar con una letra o '_'
-// Solo acepta letras, números y '_'
-
 void add_or_update_variable(t_mini *mini, char *var, char *value)
 {
     t_list *node;
@@ -85,37 +62,12 @@ void nodes_order(t_mini *mini)
         node = node->next;
     }
 }
-/*
-void print_export_list(t_mini *mini)
-{
-    t_list *node;
-
-    nodes_order(mini);  // Primero ordenamos la lista alfabéticamente
-
-    node = mini->first_node;
-    while (node)
-    {
-        // Omite las variables con solo un carácter igual a '_'
-        if (ft_strlen(node->variable) == 1 && node->variable[0] == '_')
-        {
-            node = node->next;  // Omite las variables con solo un carácter que sea _
-            continue;
-        }
-        // Imprime el formato "declare -x VAR="VALUE""
-        if (node->content)
-            printf("declare -x %s=\"%s\"\n", node->variable, node->content);
-        else
-            printf("declare -x %s\n", node->variable);
-
-        node = node->next;
-    }
-}*/
 
 void print_export_list(t_mini *mini)
 {
     t_list *node;
     int printed = 0;
-    int total = ft_lstsize_mini(mini->first_node); // Asume que esta función ya existe
+    int total = ft_lstsize_mini(mini->first_node);
     int current_order = 0;
 
     nodes_order(mini); // Asigna el "order" a cada nodo
@@ -127,7 +79,7 @@ void print_export_list(t_mini *mini)
         {
             if (node->order == current_order)
             {
-                // Ignora la variable "_" como especificaste
+                // Ignora la variable "_"
                 if (!(ft_strlen(node->variable) == 1 && node->variable[0] == '_'))
                 {
                     if (node->content)
@@ -143,7 +95,8 @@ void print_export_list(t_mini *mini)
         current_order++;
     }
 }
-
+//Llama a nodes_order() para asignar una "posición" alfabética a cada variable.
+//Luego imprime una por una, en el orden de menor a mayor order.
 
 int export_args(char **args, t_mini *mini)
 {
@@ -162,7 +115,7 @@ int export_args(char **args, t_mini *mini)
         value = ft_strchr(var_name, '=');
         if (value)
             *value++ = '\0';
-        if (is_valid_variable(var_name))
+        if (is_valid_variable_export(var_name))
             add_or_update_variable(mini, var_name, value);
         else
         {
@@ -196,48 +149,3 @@ int ft_export(char **args, t_mini *mini)
 //(no puede empezar con un número o contener caracteres inválidos como = en el nombre).
 //No usa export VAR sin = para marcar variables como exportadas, ya que minishell no requiere esto.
 //El orden importa: cuando se imprimen las variables, deben aparecer ordenadas alfabéticamente.
-
-
-//UN MAIN CREADO CON CHATGPT PATA VER SI FUNCIONA
-/*
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-int main() {
-    // Inicializar un entorno de pruebas
-    t_mini mini;
-    mini.first_node = NULL;
-    mini.total_nodes = 0;
-    printf("aqui llega\n");
-    // Agregar algunas variables de entorno iniciales
-    add_or_update_variable(&mini, "USER", "alice");
-    add_or_update_variable(&mini, "HOME", "/home/alice");
-    add_or_update_variable(&mini, "SHELL", "/bin/bash");
-
-    // Comprobar el comportamiento de `ft_export` sin argumentos
-    printf("=== Sin argumentos ===\n");
-    char *args1[] = {"export", NULL};  // No pasa argumentos, solo el comando
-    ft_export(args1, &mini);  // Debería imprimir las variables ordenadas alfabéticamente
-
-    // Agregar más variables de entorno
-    add_or_update_variable(&mini, "PATH", "/usr/bin:/bin");
-    add_or_update_variable(&mini, "EDITOR", "vim");
-
-    // Comprobar el comportamiento de `ft_export` con una asignación de variable
-    printf("\n=== Con argumentos ===\n");
-    char *args2[] = {"export", "NEW_VAR=value", NULL};  // Agregar una nueva variable
-    ft_export(args2, &mini);  // Debería agregar `NEW_VAR` con su valor a la lista
-
-    // Comprobar el comportamiento de `ft_export` con una actualización de variable
-    printf("\n=== Actualizar variable ===\n");
-    char *args3[] = {"export", "HOME=/home/alice/updated", NULL};  // Actualizar `HOME`
-    ft_export(args3, &mini);  // Debería actualizar el valor de `HOME`
-
-    // Imprimir la lista final de variables
-    printf("\n=== Lista Final ===\n");
-    ft_export(args1, &mini);  // Debería imprimir todas las variables ordenadas correctamente
-
-    return 0;
-}
-*/

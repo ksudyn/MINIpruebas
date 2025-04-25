@@ -12,6 +12,21 @@
 
 #include "../minishell.h"
 
+void	free_path_list(char **path_list)
+{
+	int	i;
+
+	i = 0;
+	if (!path_list)
+		return ;
+	while (path_list[i])
+	{
+		free(path_list[i]);
+		i++;
+	}
+	free(path_list);
+}
+
 int	ft_lstsize_mini(t_list *lst)
 {
 	int	i;
@@ -69,44 +84,25 @@ int	node_to_end(t_list **list, t_list *insert)
 	return (1);
 }
 
-void execute_builtins(t_mini *mini, char **args)
+int is_valid_variable_export(char *var)
 {
-    if (args[0] == NULL)
-        return;
+    int i;
+    
+    i  = 0;
+    if (!var || !var[0])
+        return 0;
 
-    if (ft_strncmp(args[0], "cd", 3) == 0)
-        ft_cd(args);
-    else if (ft_strncmp(args[0], "echo", 5) == 0)
-        ft_echo(args);
-    else if (ft_strncmp(args[0], "env", 4) == 0)
-        ft_env(args, mini);
-    else if (ft_strncmp(args[0], "exit", 5) == 0)
-        ft_exit(args);
-    else if (ft_strncmp(args[0], "export", 7) == 0)
-        ft_export(args, mini);
-    else if (ft_strncmp(args[0], "pwd", 4) == 0)
-        ft_pwd();
-    else if (ft_strcmp(args[0], "unset") == 0)
-        ft_unset(mini, args);
-}
+    if (!ft_isalpha(var[0]) && var[0] != '_')
+        return 0;
 
-int	is_builtin(char *cmd)
-{
-	if (!cmd)
-		return (0);
-	if (ft_strncmp(cmd, "cd", 3) == 0)
-		return (1);
-	else if (ft_strncmp(cmd, "echo", 5) == 0)
-		return (1);
-	else if (ft_strncmp(cmd, "env", 4) == 0)
-		return (1);
-	else if (ft_strncmp(cmd, "exit", 5) == 0)
-		return (1);
-	else if (ft_strncmp(cmd, "export", 7) == 0)
-		return (1);
-	else if (ft_strncmp(cmd, "pwd", 4) == 0)
-		return (1);
-	else if (ft_strcmp(cmd, "unset") == 0)
-		return (1);
-	return (0);
+    while (var[i])
+    {
+        if (!ft_isalnum(var[i]) && var[i] != '_')
+            return 0;
+        i++;
+    }
+
+    return 1;  // Es válido
 }
+// Debe empezar con una letra o '_'
+// Solo acepta letras, números y '_'

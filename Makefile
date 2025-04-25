@@ -10,6 +10,7 @@ SRCS := \
 	src/builtins/cpy_envp.c \
 	src/builtins/echo.c \
 	src/builtins/env.c \
+	src/builtins/execute_builtins.c\
 	src/builtins/execute_command.c\
 	src/builtins/exit.c \
 	src/builtins/export.c \
@@ -17,6 +18,7 @@ SRCS := \
 	src/builtins/unset.c \
 	src/builtins/utils.c \
 	src/ctrls/ctrls.c
+#	src/redirects/redirects.c
 
 SRCS_LIB := $(addprefix ./libft/, \
 	ft_putchar.c	ft_isdigit.c ft_putchar_fd.c	ft_substr.c ft_hexadec.c	ft_putnbr.c\

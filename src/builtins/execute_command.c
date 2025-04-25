@@ -12,21 +12,6 @@
 
 #include "../minishell.h"
 
-void	free_path_list(char **path_list)
-{
-	int	i;
-
-	i = 0;
-	if (!path_list)
-		return ;
-	while (path_list[i])
-	{
-		free(path_list[i]);
-		i++;
-	}
-	free(path_list);
-}
-
 char *build_env_string(t_list *node)
 {
     char *env_string;

@@ -23,7 +23,6 @@ int main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 
-	// Inicializar el entorno
 	mini.first_node = NULL;
 	mini.total_nodes = 0;
 	init_env_list(&mini, envp);
