@@ -33,23 +33,22 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-void execute_builtins(t_mini *mini, char **args)
+void	execute_builtins(t_mini *mini, char **args)
 {
-    if (args[0] == NULL)
-        return;
-
-    if (ft_strncmp(args[0], "cd", 3) == 0)
-        ft_cd(args);
-    else if (ft_strncmp(args[0], "echo", 5) == 0)
-        ft_echo(args);
-    else if (ft_strncmp(args[0], "env", 4) == 0)
-        ft_env(args, mini);
-    else if (ft_strncmp(args[0], "exit", 5) == 0)
-        ft_exit(args);
-    else if (ft_strncmp(args[0], "export", 7) == 0)
-        ft_export(args, mini);
-    else if (ft_strncmp(args[0], "pwd", 4) == 0)
-        ft_pwd();
-    else if (ft_strcmp(args[0], "unset") == 0)
-        ft_unset(mini, args);
+	if (args[0] == NULL)
+		return ;
+	if (ft_strncmp(args[0], "cd", 3) == 0)
+		ft_cd(args);
+	else if (ft_strncmp(args[0], "echo", 5) == 0)
+		ft_echo(args);
+	else if (ft_strncmp(args[0], "env", 4) == 0)
+		ft_env(args, mini);
+	else if (ft_strncmp(args[0], "exit", 5) == 0)
+		ft_exit(args);
+	else if (ft_strncmp(args[0], "export", 7) == 0)
+		ft_export(args, mini);
+	else if (ft_strncmp(args[0], "pwd", 4) == 0)
+		ft_pwd();
+	else if (ft_strcmp(args[0], "unset") == 0)
+		ft_unset(mini, args);
 }

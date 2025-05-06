@@ -17,8 +17,9 @@ SRCS := \
 	src/builtins/pwd.c \
 	src/builtins/unset.c \
 	src/builtins/utils.c \
-	src/ctrls/ctrls.c
-#	src/redirects/redirects.c
+	src/builtins/utils_export.c\
+	src/ctrls/ctrls.c \
+	src/redirects/redirects.c
 
 SRCS_LIB := $(addprefix ./libft/, \
 	ft_putchar.c	ft_isdigit.c ft_putchar_fd.c	ft_substr.c ft_hexadec.c	ft_putnbr.c\

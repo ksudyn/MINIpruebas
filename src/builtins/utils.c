@@ -53,12 +53,18 @@ t_list	*new_node_export(char *var, char *value)
 	new_node->cmd_name = NULL;
 	new_node->cmd_path = NULL;
 	new_node->variable = ft_strdup(var);
-	new_node->content = value ? ft_strdup(value) : NULL;
+	if (value)
+		new_node->content = ft_strdup(value);
+	else
+		new_node->content = NULL;
 	new_node->order = 0;
 	new_node->next = NULL;
 	new_node->prev = NULL;
 	return (new_node);
 }
+//antes tenia esto
+//new_node->content = value ? ft_strdup(value) : NULL;
+//en new_node_export, pero es un error por eso tengo ese if y ese else
 
 int	node_to_end(t_list **list, t_list *insert)
 {
@@ -84,25 +90,22 @@ int	node_to_end(t_list **list, t_list *insert)
 	return (1);
 }
 
-int is_valid_variable_export(char *var)
+int	is_valid_variable_export(char *var)
 {
-    int i;
-    
-    i  = 0;
-    if (!var || !var[0])
-        return 0;
+	int	i;
 
-    if (!ft_isalpha(var[0]) && var[0] != '_')
-        return 0;
-
-    while (var[i])
-    {
-        if (!ft_isalnum(var[i]) && var[i] != '_')
-            return 0;
-        i++;
-    }
-
-    return 1;  // Es válido
+	i = 0;
+	if (!var || !var[0])
+		return (0);
+	if (!ft_isalpha(var[0]) && var[0] != '_')
+		return (0);
+	while (var[i])
+	{
+		if (!ft_isalnum(var[i]) && var[i] != '_')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 // Debe empezar con una letra o '_'
 // Solo acepta letras, números y '_'

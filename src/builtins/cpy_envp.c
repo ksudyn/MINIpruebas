@@ -11,11 +11,14 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
 // Función para crear un nodo de entorno
 
 t_list	*create_env_node(char *var, char *value)
 {
-	t_list	*new = malloc(sizeof(t_list));
+	t_list	*new;
+
+	new = malloc(sizeof(t_list));
 	if (!new)
 		return (NULL);
 	new->variable = strdup(var);
@@ -28,9 +31,10 @@ t_list	*create_env_node(char *var, char *value)
 // Función para agregar una variable al entorno (al final de la lista)
 void	add_env_var(t_mini *mini, char *var, char *value)
 {
-	t_list	*new = create_env_node(var, value);
+	t_list	*new;
 	t_list	*temp;
 
+	new = create_env_node(var, value);
 	temp = mini->first_node;
 	if (!new)
 		return ;
@@ -46,14 +50,14 @@ void	add_env_var(t_mini *mini, char *var, char *value)
 	mini->total_nodes++;
 }
 
-
 void	init_env_list(t_mini *mini, char **envp)
 {
-	int		i = 0;
+	int		i;
 	char	*equal;
 	char	*key;
 	char	*value;
 
+	i = 0;
 	while (envp[i])
 	{
 		equal = strchr(envp[i], '=');
@@ -69,12 +73,12 @@ void	init_env_list(t_mini *mini, char **envp)
 	}
 }
 
-
 void	free_env_list(t_mini *mini)
 {
-	t_list	*current = mini->first_node;
-	t_list	*tmp;
+	t_list *current;
+	t_list *tmp;
 
+	current = mini->first_node;
 	while (current)
 	{
 		tmp = current->next;
@@ -85,5 +89,6 @@ void	free_env_list(t_mini *mini)
 	}
 	mini->first_node = NULL;
 	mini->total_nodes = 0;
-}//esta libera la memoria del envp que tú has creado y almacenado en tu estructura t_mini,
-//cuando cierras tu minishell o ya no necesitas esa copia
+}
+	// esta libera la memoria del envp que tú has creado y almacenado en tu estructura t_mini,
+// cuando cierras tu minishell o ya no necesitas esa copia
